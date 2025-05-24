@@ -33,7 +33,8 @@ class ViewSalesHistory(ft.View):
             sales_history_table.rows.append(row)
 
         # ListViewの設定
-        list_view = ft.ListView(controls=[sales_history_table], width=900, height=700)
+        list_view = ft.ListView(
+            controls=[sales_history_table], width=900, height=700)
 
         # Viewに対する行の追加
         row_spacer = ft.Row(controls=[ft.Divider(height=5)])

@@ -8,7 +8,8 @@ from report import generate_excel_report
 
 # 定数定義
 PRODUCT_COUNT_LIMIT = 6
-PRODUCT_NAME_LIST = ["本", "DLカード", "ポストカード", "色紙", "アクリルスタンド", "キーホルダー"]
+PRODUCT_NAME_LIST = ["本", "DLカード", "ポストカード",
+                     "色紙", "アクリルスタンド", "キーホルダー"]
 
 
 # 頒布履歴表示用Viewの取得
@@ -18,7 +19,8 @@ class ViewCounter(ft.View):
         super().__init__()
         self.appbar = ft.AppBar(title=ft.Text("頒布数カウント"))
         self.data_dict = data_dict
-        self.sales_history_dict = {i: [] for i in range(PRODUCT_COUNT_LIMIT)}
+        self.sales_history_dict = {
+            i: [] for i in range(PRODUCT_COUNT_LIMIT)}
         self.define_view_components()
 
     #
@@ -28,7 +30,10 @@ class ViewCounter(ft.View):
     # 頒布数集計結果の作成
     def get_sales_tally_data_list(self):
         sales_tally_list = []
-        product_dict = {i: x.value for i, x in enumerate(self.text_field_product_list)}
+        product_dict = {
+            i: x.value
+            for i, x in enumerate(self.text_field_product_list)
+        }
 
         # 集計結果のリストを作成
         for index, item_list in self.sales_history_dict.items():
@@ -46,7 +51,10 @@ class ViewCounter(ft.View):
     # 履歴表示用データの取得
     def get_sales_history_data_list(self):
         sales_history_list = []
-        product_dict = {i: x.value for i, x in enumerate(self.text_field_product_list)}
+        product_dict = {
+            i: x.value
+            for i, x in enumerate(self.text_field_product_list)
+        }
 
         # 履歴情報のリストを作成
         for index, item_list in self.sales_history_dict.items():
@@ -56,7 +64,9 @@ class ViewCounter(ft.View):
                 sales_history_list.append(item)
 
         # ソート処理(頒布日時の降順)
-        sales_history_list = sorted(sales_history_list, key=lambda x: x["sales_at"], reverse=True)
+        sales_history_list = sorted(
+            sales_history_list,
+            key=lambda x: x["sales_at"], reverse=True)
 
         return sales_history_list
 
@@ -80,8 +90,10 @@ class ViewCounter(ft.View):
         }
 
         # 頒布数集計結果・履歴情報データの作成処理
-        self.data_dict["sales_tally"] = self.get_sales_tally_data_list()
-        self.data_dict["sales_history"] = self.get_sales_history_data_list()
+        self.data_dict["sales_tally"] = \
+            self.get_sales_tally_data_list()
+        self.data_dict["sales_history"] = \
+            self.get_sales_history_data_list()
 
         # Excelファイル生成処理の呼び出し
         generate_excel_report(save_file_path, self.data_dict)
@@ -91,7 +103,9 @@ class ViewCounter(ft.View):
         time_str = datetime.now().strftime("%H:%M:%S")
         product = self.text_field_product_list[index].value
         price = int(self.text_field_price_list[index].value)
-        self.page.open(ft.SnackBar(ft.Text(f"{time_str} - {product}(価格: ￥{price:,}) 追加")))
+        show_text = ft.Text(
+            f"{time_str} - {product}(価格: ￥{price:,}) 追加")
+        self.page.open(ft.SnackBar(show_text))
 
     # イベント開催日指定時の処理
     def event_change_zine_event_date(self, e):
@@ -166,7 +180,8 @@ class ViewCounter(ft.View):
     # 頒布履歴確認ボタン押下時の処理
     def event_click_go_sales_history(self):
         # 共有dict内に履歴情報データを格納
-        self.data_dict["sales_history"] = self.get_sales_history_data_list()
+        self.data_dict["sales_history"] = \
+            self.get_sales_history_data_list()
         self.page.go("/sales_history")
 
     # レポートExcelファイル保存先パスの指定
@@ -191,15 +206,18 @@ class ViewCounter(ft.View):
         # Note: appendによるpage/viewへの追加がないとエラー発生
         dialog_select_report_excel_save_path = ft.FilePicker(
             on_result=self.event_report_excel_save_path)
-        self.controls.append(dialog_select_report_excel_save_path)
+        self.controls.append(
+            dialog_select_report_excel_save_path)
 
         # イベント情報入力部分の定義
         self.text_field_zine_event_name = ft.TextField(
             label="イベント名", width=300)
         self.text_field_zine_event_desc = ft.TextField(
-            label="イベント説明", width=650, multiline=True, min_lines=2)
+            label="イベント説明", width=650,
+            multiline=True, min_lines=2)
         self.text_field_zine_event_date = ft.TextField(
-            label="開催日", value="----/--/--", width=200, read_only=True)
+            label="開催日", value="----/--/--",
+            width=200, read_only=True)
         button_zine_event_date = ft.ElevatedButton(
             "日付選択",
             icon=ft.Icons.CALENDAR_TODAY,
@@ -217,7 +235,8 @@ class ViewCounter(ft.View):
             ft.Dropdown(
                 label=f"商品種別",
                 width=180, disabled=True,
-                options=[ft.DropdownOption(x) for x in PRODUCT_NAME_LIST]
+                options=[ft.DropdownOption(x)
+                         for x in PRODUCT_NAME_LIST]
             ) for _ in range(PRODUCT_COUNT_LIMIT)
         ]
 
@@ -263,11 +282,12 @@ class ViewCounter(ft.View):
         )
         button_save_report_excel = ft.CupertinoFilledButton(
             "集計レポートExcelの保存",
-            on_click=lambda _: dialog_select_report_excel_save_path.save_file(
-                "集計レポートExcel保存先の指定",
-                allowed_extensions=["xlsx"],
-                initial_directory=str(Path.home() / "Downloads"),
-            )
+            on_click=lambda _:
+                dialog_select_report_excel_save_path.save_file(
+                    "集計レポートExcel保存先の指定",
+                    allowed_extensions=["xlsx"],
+                    initial_directory=str(Path.home() / "Downloads"),
+                )
         )
 
         # 表示間隔調整用のDivider定義
@@ -276,13 +296,16 @@ class ViewCounter(ft.View):
         col_spacer = ft.VerticalDivider(width=40)
 
         # イベント情報入力部分の作成
-        row_zine_event_header = ft.Row(controls=[ft.Text("イベント情報", size=20)])
-        row_zine_event_name = ft.Row(controls=[
-            self.text_field_zine_event_name,
-            self.text_field_zine_event_date,
-            button_zine_event_date
-        ])
-        row_zine_event_desc = ft.Row(controls=[self.text_field_zine_event_desc])
+        row_zine_event_header = ft.Row(
+            controls=[ft.Text("イベント情報", size=20)])
+        row_zine_event_name = ft.Row(
+            controls=[
+                self.text_field_zine_event_name,
+                self.text_field_zine_event_date,
+                button_zine_event_date
+            ])
+        row_zine_event_desc = ft.Row(
+            controls=[self.text_field_zine_event_desc])
 
         # Viewに対する行の追加
         self.controls.extend([
@@ -295,7 +318,8 @@ class ViewCounter(ft.View):
 
         # 頒布商品入力部分の作成
         # ヘッダ行の追加
-        product_header_row = ft.Row(controls=[ft.Text("商品一覧", size=20)])
+        product_header_row = ft.Row(
+            controls=[ft.Text("商品一覧", size=20)])
         self.controls.append(product_header_row)
 
         # 商品カウント用の行データ作成

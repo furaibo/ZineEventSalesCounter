@@ -6,7 +6,10 @@ from pathlib import Path
 
 
 # テーブル描画
-def write_excel_table(sheet, sheet_data: list, count_empty_row=0, count_empty_col=0):
+def write_excel_table(
+        sheet, sheet_data: list,
+        count_empty_row=0, count_empty_col=0):
+
     # 罫線の設定
     side = Side(style="thin", color="000000")
     border = Border(top=side, bottom=side, left=side, right=side)
@@ -65,7 +68,8 @@ def generate_excel_report(save_path: Path, data_dict: dict):
     sheet1_data.extend([
         ["イベント名", data_dict["zine_event"]["name"]],
         ["実施日時", data_dict["zine_event"]["date"]],
-        ["内容説明", "/n".join(textwrap.wrap(data_dict["zine_event"]["desc"], 40))],
+        ["内容説明", "/n".join(
+            textwrap.wrap(data_dict["zine_event"]["desc"], 40))],
     ])
     write_excel_table(sheet1, sheet1_data, 1, 1)
     adjust_table_columns(sheet1)

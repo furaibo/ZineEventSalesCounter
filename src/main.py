@@ -24,8 +24,10 @@ def main(page: ft.Page):
             dialog = ft.AlertDialog(
                 content=ft.Text("アプリを終了しますか？"),
                 actions=[
-                    ft.TextButton("Yes", on_click=lambda _: page.window.destroy()),
-                    ft.TextButton("No", on_click=lambda _: page.close(dialog))
+                    ft.TextButton(
+                        "Yes", on_click=lambda _: page.window.destroy()),
+                    ft.TextButton(
+                        "No", on_click=lambda _: page.close(dialog))
                 ],
                 actions_alignment=ft.MainAxisAlignment.CENTER
             )
@@ -69,7 +71,8 @@ def main(page: ft.Page):
     page.on_view_pop = view_pop
 
     # トップのUI定義
-    button_to_count = ft.Button(text="入力へ進む", on_click=lambda _: page.go("/count"))
+    button_to_count = ft.Button(
+        text="入力へ進む", on_click=lambda _: page.go("/count"))
     row_button_to_count = ft.Row(controls=[button_to_count])
 
     # pageへの追加
